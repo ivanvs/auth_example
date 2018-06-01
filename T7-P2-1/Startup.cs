@@ -25,13 +25,14 @@ namespace T7_P2_1
 
         public void Configuration(IAppBuilder app)
         {
-            
-            HttpConfiguration config = new HttpConfiguration();
-            WebApiConfig.Register(config);
-            app.UseWebApi(config);
-            app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
-            var container = SetupUnity(config);
+            var container = SetupUnity();
             ConfigureOAuth(app, container);
+
+            HttpConfiguration config = new HttpConfiguration();
+            config.DependencyResolver = new UnityDependencyResolver(container);
+
+            app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
+            WebApiConfig.Register(config);
             app.UseWebApi(config);
 
         }
@@ -43,7 +44,7 @@ namespace T7_P2_1
                 AllowInsecureHttp = true,
                 TokenEndpointPath = new PathString("/token"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
-                Provider = new SimpleAuthorizationServerProvider(() => container.Resolve<IAuthRepository>())
+                Provider = new SimpleAuthorizationServerProvider(container)
             };
 
             // Token Generation
@@ -52,7 +53,7 @@ namespace T7_P2_1
 
         }
 
-        private UnityContainer SetupUnity(HttpConfiguration httpConfiguration)
+        private UnityContainer SetupUnity()
         {
             var container = new UnityContainer();
 
@@ -66,8 +67,6 @@ namespace T7_P2_1
             container.RegisterType<IAuthRepository, AuthRepository>();
 
             container.RegisterType<IUserService, UserService>();
-
-            httpConfiguration.DependencyResolver = new UnityDependencyResolver(container);
             return container;
         }
 

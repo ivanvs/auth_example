@@ -7,16 +7,17 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using T7_P2_1.Repositories;
+using Unity;
 
 namespace T7_P2_1.Providers
 {
     public class SimpleAuthorizationServerProvider : OAuthAuthorizationServerProvider
     {
-        private Func<IAuthRepository> authRepoFactory;
+        private UnityContainer container;
 
-        public SimpleAuthorizationServerProvider(Func<IAuthRepository> authRepoFactory)
+        public SimpleAuthorizationServerProvider(UnityContainer container)
         {
-            this.authRepoFactory = authRepoFactory;
+            this.container = container;
         }
 
         public override async Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
@@ -29,7 +30,7 @@ namespace T7_P2_1.Providers
 
             IdentityUser user = null;
             IEnumerable<string> roles = null;
-            IAuthRepository _repo = authRepoFactory();
+            IAuthRepository _repo = container.Resolve<IAuthRepository>();
             
             user = await _repo.FindUser(context.UserName, context.Password);
 

@@ -26,7 +26,7 @@ namespace T7_P2_1.Controllers
             return GetDummyDb();
         }
 
-        [Authorize(Roles = "users,admins")]
+        [Authorize(Roles = "users")]
         [Route("public")]
         public IEnumerable<Product> GetAllPublic()
         {
