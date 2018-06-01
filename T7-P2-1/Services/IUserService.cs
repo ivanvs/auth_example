@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace T7_P2_1.Services
 {
     public interface IUserService
     {
-        ApplicationUser RegisterUser(UserDTO user);
-        ApplicationUser RegisterAdmin(UserDTO user);
+        Task<IdentityResult> RegisterCustomer(UserDTO user);
+        Task<IdentityResult> RegisterAdmin(UserDTO user);
     }
 }

@@ -29,23 +29,24 @@ namespace T7_P2_1.Providers
 
             IdentityUser user = null;
             IEnumerable<string> roles = null;
-            using (IAuthRepository _repo = authRepoFactory())
+            IAuthRepository _repo = authRepoFactory();
+            
+            user = await _repo.FindUser(context.UserName, context.Password);
+
+            if (user == null)
             {
-                user = await _repo.FindUser(context.UserName, context.Password);
-
-                if (user == null)
-                {
-                    context.SetError("invalid_grant", "The user name or password is incorrect.");
-                    return;
-                }
-
-                roles = await _repo.FindRoles(user.Id);
+                context.SetError("invalid_grant", "The user name or password is incorrect.");
+                return;
             }
+
+            roles = await _repo.FindRoles(user.Id);
+            
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
             identity.AddClaim(new Claim("sub", context.UserName));
             identity.AddClaim(new Claim(ClaimTypes.Role, string.Join(",", roles)));
 
             context.Validated(identity);
+            _repo.Dispose();
         }
     }
 

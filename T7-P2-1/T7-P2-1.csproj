@@ -157,6 +157,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Infrastructure\AuthContext.cs" />
+    <Compile Include="Models\AdminUser.cs" />
+    <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\DTOs\UserDTO.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

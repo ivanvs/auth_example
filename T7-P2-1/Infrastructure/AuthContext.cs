@@ -15,6 +15,9 @@ namespace T7_P2_1.Infrastructure
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<AuthContext>());
         }
 
+        public DbSet<AdminUser> AdminUsers;
+        public DbSet<Customer> Customers;
+
     }
 
 }

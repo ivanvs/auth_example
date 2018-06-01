@@ -16,11 +16,11 @@ namespace T7_P2_1.Controllers
     [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
-        private IUnitOfWork db;
+        private IUserService service;
 
-        public AccountController(IUnitOfWork db)
+        public AccountController(IUserService userService)
         {
-            this.db = db;
+            this.service = userService;
         }
 
         [AllowAnonymous]
@@ -32,7 +32,7 @@ namespace T7_P2_1.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await db.AuthRepository.RegisterUser(userModel);
+            var result = await service.RegisterCustomer(userModel);
 
             if (result == null)
             {
@@ -51,7 +51,7 @@ namespace T7_P2_1.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await db.AuthRepository.RegisterAdminUser(userModel);
+            var result = await service.RegisterAdmin(userModel);
 
             if (result == null)
             {
@@ -63,11 +63,6 @@ namespace T7_P2_1.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.AuthRepository.Dispose();
-            }
-
             base.Dispose(disposing);
         }
 

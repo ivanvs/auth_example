@@ -25,28 +25,16 @@ namespace T7_P2_1.Repositories
         }
 
 
-        public async Task<IdentityResult> RegisterUser(UserDTO userModel)
+        public async Task<IdentityResult> RegisterUser(Customer customer, string password)
         {
-            ApplicationUser user = new ApplicationUser
-            {
-                UserName = userModel.UserName,
-                FirstName = userModel.FirstName,
-                LastName = userModel.LastName
-
-            };
-            var result = await _userManager.CreateAsync(user, userModel.Password);
-            _userManager.AddToRole(user.Id, "users");
+            var result = await _userManager.CreateAsync(customer, password);
+            _userManager.AddToRole(customer.Id, "users");
             return result;
         }
-        public async Task<IdentityResult> RegisterAdminUser(UserDTO userModel)
+        public async Task<IdentityResult> RegisterAdminUser(AdminUser userModel, string password)
         {
-            ApplicationUser user = new ApplicationUser {
-                UserName = userModel.UserName,
-                FirstName = userModel.FirstName,
-                LastName = userModel.LastName
-            };
-            var result = await _userManager.CreateAsync(user, userModel.Password);
-            _userManager.AddToRole(user.Id, "admins");
+            var result = await _userManager.CreateAsync(userModel, password);
+            _userManager.AddToRole(userModel.Id, "admins");
             return result;
         }
 
