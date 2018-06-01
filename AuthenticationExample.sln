@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "T7-P2-1", "T7-P2-1\T7-P2-1.csproj", "{A9909925-4874-4AC3-9D0F-120F3644EE82}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthExampleProject", "T7-P2-1\AuthExampleProject.csproj", "{A9909925-4874-4AC3-9D0F-120F3644EE82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
