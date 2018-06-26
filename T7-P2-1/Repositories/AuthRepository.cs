@@ -14,14 +14,11 @@ namespace T7_P2_1.Repositories
 {
     public class AuthRepository : IAuthRepository, IDisposable
     {
-        private DbContext _ctx;
-
         private UserManager<ApplicationUser> _userManager;
 
         public AuthRepository(DbContext context)
         {
-            _ctx = context;
-            _userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_ctx));
+            _userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
         }
 
 
@@ -52,8 +49,11 @@ namespace T7_P2_1.Repositories
 
         public void Dispose()
         {
-            _ctx.Dispose();
-            _userManager.Dispose();
+            if(_userManager != null)
+            {
+                _userManager.Dispose();
+                _userManager = null;
+            }
         }
 
     }
