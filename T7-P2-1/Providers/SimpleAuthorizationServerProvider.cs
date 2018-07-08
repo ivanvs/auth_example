@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
+using T7_P2_1.Models;
 using T7_P2_1.Repositories;
 using Unity;
 
@@ -24,6 +25,7 @@ namespace T7_P2_1.Providers
         {
             context.Validated();
         }
+
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
@@ -43,11 +45,30 @@ namespace T7_P2_1.Providers
             roles = await _repo.FindRoles(user.Id);
             
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
-            identity.AddClaim(new Claim("sub", context.UserName));
+            identity.AddClaim(new Claim(ClaimTypes.Email, context.UserName));
+            identity.AddClaim(new Claim(ClaimTypes.Name, ((ApplicationUser)user)?.FirstName));
+            identity.AddClaim(new Claim(ClaimTypes.Surname, ((ApplicationUser)user)?.LastName));
             identity.AddClaim(new Claim(ClaimTypes.Role, string.Join(",", roles)));
 
             context.Validated(identity);
             _repo.Dispose();
+        }
+
+
+        public override Task TokenEndpoint(OAuthTokenEndpointContext context)
+        {
+            Dictionary<string, string> additionalUserInfo = new Dictionary<string, string>();
+            foreach(Claim claim in context.Identity.Claims)
+            {
+                context.AdditionalResponseParameters.Add(claim.Type.Split('/').Last(), claim.Value);
+            }
+
+            foreach (KeyValuePair<string, string> property in context.Properties.Dictionary)
+            {
+                context.AdditionalResponseParameters.Add(property.Key, property.Value);
+            }
+
+            return Task.FromResult<object>(null);
         }
     }
 
