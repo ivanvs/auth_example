@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Web.Http;
 
 namespace T7_P2_1.Controllers
@@ -23,6 +24,11 @@ namespace T7_P2_1.Controllers
         [Route("admin")]
         public IEnumerable<Product> GetAll()
         {
+            bool isAdmin = RequestContext.Principal.IsInRole("admins");
+            bool isAuthenticated = RequestContext.Principal.Identity.IsAuthenticated;
+            string userEmail = ((ClaimsPrincipal)RequestContext.Principal).FindFirst(x => x.Type == ClaimTypes.Email).Value;
+            string userId = ((ClaimsPrincipal)RequestContext.Principal).FindFirst(x => x.Type == "UserId").Value;
+
             return GetDummyDb();
         }
 
@@ -30,6 +36,7 @@ namespace T7_P2_1.Controllers
         [Route("public")]
         public IEnumerable<Product> GetAllPublic()
         {
+            
             Debug.WriteLine(RequestContext.Principal.Identity.Name);
             return GetDummyDb();
         }

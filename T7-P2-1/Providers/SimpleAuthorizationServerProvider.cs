@@ -49,6 +49,7 @@ namespace T7_P2_1.Providers
             identity.AddClaim(new Claim(ClaimTypes.Name, ((ApplicationUser)user)?.FirstName));
             identity.AddClaim(new Claim(ClaimTypes.Surname, ((ApplicationUser)user)?.LastName));
             identity.AddClaim(new Claim(ClaimTypes.Role, string.Join(",", roles)));
+            identity.AddClaim(new Claim("UserId", user.Id));
 
             context.Validated(identity);
             _repo.Dispose();
